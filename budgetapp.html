@@ -2,283 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nexus Mess Tracker Pro</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>VetTrack Admin | Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #f8fafc; --card: #ffffff; --text: #1e293b;
-            --muted: #64748b; --primary: #2563eb; --border: #e2e8f0;
-            --green: #10b981; --orange: #f59e0b; --red: #ef4444;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        .dark {
-            --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
-            --muted: #94a3b8; --border: #334155;
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 40px; transition: 0.3s; }
+        :root { --p: #FF8C00; --bg: #F8F9FA; --text: #1A1A1A; --card: #ffffff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        .container { max-width: 500px; margin: 0 auto; padding: 16px; }
-        
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .header h1 { font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -1px; color: var(--primary); }
-        .header-btns { display: flex; gap: 10px; }
-        .icon-btn { background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: 10px; cursor: pointer; font-size: 18px; box-shadow: var(--shadow); }
+        body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
 
-        .status-bar { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
-        #saveIndicator { color: var(--green); opacity: 0; transition: 0.3s; }
+        /* HEADER */
+        .admin-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-top: 10px; }
+        .admin-head h1 { font-family: 'Outfit'; font-size: 24px; margin: 0; }
+        .sync-indicator { font-size: 10px; font-weight: 800; color: #4CAF50; display: flex; align-items: center; gap: 5px; }
 
-        /* Quick Log UI with Sections */
-        .action-card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 20px; }
-        .meal-group-label { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin: 15px 0 8px 0; display: flex; align-items: center; gap: 8px; }
-        .meal-group-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-        .meal-group-label:first-child { margin-top: 0; }
-
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .toggle-btn { 
-            padding: 14px 10px; border-radius: 14px; border: 1px solid var(--border);
-            background: var(--card); color: var(--text); cursor: pointer;
-            font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* USER CARDS */
+        .user-card { 
+            background: var(--card); padding: 20px; border-radius: 24px; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #EEE;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .toggle-btn.active { border-color: var(--primary); background: rgba(37, 99, 235, 0.1); color: var(--primary); border-width: 2px; }
-        .toggle-btn span { font-size: 10px; opacity: 0.7; }
+        .user-info h3 { margin: 0; font-size: 16px; font-weight: 800; }
+        .user-info p { margin: 0; font-size: 12px; color: #888; }
 
-        /* Stats */
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .stat-item { background: var(--card); padding: 16px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .stat-val { font-size: 20px; font-weight: 800; display: block; margin-top: 4px; }
-        .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+        /* BOTTOM NAV */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; 
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #EEE; padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item { border: none; background: none; font-size: 11px; font-weight: 800; color: #AAA; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item.active { color: var(--p); }
+        .nav-item svg { width: 22px; height: 22px; }
 
-        /* Progress Bar */
-        .progress-box { background: var(--card); padding: 16px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .progress-container { height: 10px; background: var(--border); border-radius: 20px; overflow: hidden; margin-top: 10px; }
-        .progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.6s; }
+        /* MODAL / SHEET */
+        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); z-index: 100; display: none; align-items: flex-end; }
+        .sheet { background: white; width: 100%; border-radius: 30px 30px 0 0; padding: 30px; max-height: 85vh; overflow-y: auto; transform: translateY(100%); transition: 0.3s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        .sheet.open { transform: translateY(0); }
 
-        /* History & Archive List */
-        .section-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
-        .table-wrap { display: none; background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        td, th { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
+        .log-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F5F5F5; font-size: 14px; }
+        .btn-action { background: var(--p); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer; }
         
-        .archive-item { background: var(--card); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .archive-info b { display: block; font-size: 14px; }
-        .archive-info small { color: var(--muted); font-size: 11px; }
-
-        #settingsModal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--card); padding: 24px; border-radius: 24px; width: 90%; max-width: 400px; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: 1.5px solid #EEE; margin-bottom: 15px; font-size: 16px; }
+        .badge { background: var(--p-soft); color: var(--p); padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>Nexus</h1>
-        <div class="header-btns">
-            <button class="icon-btn" onclick="exportData()">💾</button>
-            <button class="icon-btn" onclick="document.getElementById('settingsModal').style.display='flex'">⚙️</button>
-            <button class="icon-btn" onclick="toggleTheme()">🌙</button>
+    <div id="view-users" class="section">
+        <div class="admin-head">
+            <h1>Master Center</h1>
+            <div class="sync-indicator">🟢 Fully Synced</div>
+        </div>
+        <div id="masterUserList">
+            <p style="color:#888; font-size: 14px; text-align: center; margin-top: 50px;">Scanning Database...</p>
         </div>
     </div>
 
-    <div class="status-bar">
-        <span>Editing: <b id="displayDate"></b></span>
-        <span id="saveIndicator">✓ Saved</span>
+    <div id="view-settings" class="section" style="display:none;">
+        <div class="admin-head"><h1>Global Config</h1></div>
+        <div style="background:white; padding:25px; border-radius:24px; border:1px solid #EEE;">
+            <label style="font-size:11px; font-weight:800; color:#888;">GLOBAL MEAL RATE (₹)</label>
+            <input type="number" id="gMeal" value="50">
+            <label style="font-size:11px; font-weight:800; color:#888;">GLOBAL WATER RATE (₹)</label>
+            <input type="number" id="gWater" value="30">
+            <button class="btn-action" style="width:100%; height:55px;" onclick="saveGlobalConfig()">Apply to All Users</button>
+        </div>
     </div>
+</div>
 
-    <div class="action-card">
-        <div class="meal-group-label">Lunch</div>
-        <div class="grid-buttons">
-            <button class="toggle-btn" id="btnLA" onclick="toggleField('LA')">🍱 <span id="labelLA">Mess A</span></button>
-            <button class="toggle-btn" id="btnLB" onclick="toggleField('LB')">🍲 <span id="labelLB">Mess B</span></button>
-        </div>
-
-        <div class="meal-group-label">Dinner</div>
-        <div class="grid-buttons">
-            <button class="toggle-btn" id="btnDA" onclick="toggleField('DA')">🍛 <span id="labelDA">Mess A</span></button>
-            <button class="toggle-btn" id="btnDB" onclick="toggleField('DB')">🥘 <span id="labelDB">Mess B</span></button>
-        </div>
-
-        <div class="meal-group-label">Others</div>
-        <div style="display: flex; gap: 12px;">
-            <button class="toggle-btn" id="btnW" style="flex: 1;" onclick="toggleField('W')">💧 <span>Water</span></button>
-            <div class="toggle-btn" style="flex: 1; cursor: default;">
-                <span style="font-size: 10px; opacity:1">Extra Meal</span>
-                <input type="number" id="extraInput" value="0" min="0" onchange="updateExtra(this.value)" style="width: 50px; border:none; background:transparent; font-size:18px; font-weight:800; color:var(--primary); text-align:center;">
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()">
+    <div class="sheet" id="sheet" onclick="event.stopPropagation()">
+        <h2 id="sheetTitle" style="font-family:Outfit; margin-top:0;">Inspect User</h2>
+        <div id="fullDataSync">
             </div>
-        </div>
-    </div>
-
-    <div class="progress-box">
-        <div style="display:flex; justify-content: space-between; align-items: flex-end;">
-            <span class="stat-label">Budget Usage</span>
-            <b id="budgetPct">0%</b>
-        </div>
-        <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-    </div>
-
-    <div class="stats">
-        <div class="stat-item"><span class="stat-label">Total Bill</span><span class="stat-val" id="statTotal">₹0</span></div>
-        <div class="stat-item"><span class="stat-label">Meals</span><span class="stat-val" id="statMeals">0</span></div>
-    </div>
-
-    <button class="section-btn" onclick="toggleEl('historyTable')">📅 Current Month Ledger</button>
-    <div id="historyTable" class="table-wrap">
-        <table>
-            <thead><tr><th>Day</th><th>L</th><th>D</th><th>W</th></tr></thead>
-            <tbody id="tbody"></tbody>
-        </table>
-    </div>
-
-    <button class="section-btn" style="background:var(--muted)" onclick="toggleEl('archiveBox')">📚 History Archives</button>
-    <div id="archiveBox" style="display:none"></div>
-</div>
-
-<div id="settingsModal" onclick="if(event.target==this) this.style.display='none'">
-    <div class="modal-content">
-        <h3 style="margin:0 0 15px 0">Settings</h3>
-        <label style="font-size:11px; font-weight:bold; color:var(--muted)">MESS A</label>
-        <input type="text" id="setNameA" onchange="updateSet()" style="width:100%; padding:10px; margin:5px 0 15px 0; border-radius:8px; border:1px solid var(--border);">
-        <label style="font-size:11px; font-weight:bold; color:var(--muted)">MESS B</label>
-        <input type="text" id="setNameB" onchange="updateSet()" style="width:100%; padding:10px; margin:5px 0 15px 0; border-radius:8px; border:1px solid var(--border);">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div><label style="font-size:11px;">Meal ₹</label><input type="number" id="setPriceM" onchange="updateSet()" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border);"></div>
-            <div><label style="font-size:11px;">Water ₹</label><input type="number" id="setPriceW" onchange="updateSet()" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border);"></div>
-        </div>
-        <button class="section-btn" style="margin-top:20px;" onclick="document.getElementById('settingsModal').style.display='none'">Close</button>
     </div>
 </div>
 
-<script>
-    let config = JSON.parse(localStorage.getItem('m-conf')) || { nA: "Hostel", nB: "Outside", pM: 60, pW: 20, bud: 5000 };
-    let viewDate = new Date();
-    const currentKey = `m-${viewDate.getFullYear()}-${viewDate.getMonth()}`;
-    let data = JSON.parse(localStorage.getItem(currentKey)) || {};
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="nav('view-users', this)">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Users
+    </button>
+    <button class="nav-item" onclick="nav('view-settings', this)">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        Config
+    </button>
+</nav>
 
-    // --- ARCHIVE ENGINE ---
-    function runArchive() {
-        const lastKey = localStorage.getItem('last-key');
-        if (lastKey && lastKey !== currentKey) {
-            const oldData = JSON.parse(localStorage.getItem(lastKey)) || {};
-            let meals = 0, water = 0, extras = 0;
-            Object.values(oldData).forEach(v => {
-                if(v.LA || v.LB) meals++; if(v.DA || v.DB) meals++;
-                if(v.W) water++; extras += (v.EX || 0);
-            });
-            const total = (meals + extras) * config.pM + (water * config.pW);
-            
-            let archives = JSON.parse(localStorage.getItem('m-archives')) || [];
-            archives.push({ date: lastKey.replace('m-', ''), bill: total, meals: meals + extras });
-            localStorage.setItem('m-archives', JSON.stringify(archives));
-        }
-        localStorage.setItem('last-key', currentKey);
-    }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    function applyUI() {
-        document.getElementById('displayDate').innerText = viewDate.toDateString();
-        document.getElementById('setNameA').value = config.nA;
-        document.getElementById('setNameB').value = config.nB;
-        document.getElementById('setPriceM').value = config.pM;
-        document.getElementById('setPriceW').value = config.pW;
-        
-        document.getElementById('labelLA').innerText = config.nA;
-        document.getElementById('labelDA').innerText = config.nA;
-        document.getElementById('labelLB').innerText = config.nB;
-        document.getElementById('labelDB').innerText = config.nB;
-        
-        const d = data[viewDate.getDate()] || {LA:0, LB:0, DA:0, DB:0, W:0, EX:0};
-        document.getElementById('btnLA').classList.toggle('active', !!d.LA);
-        document.getElementById('btnLB').classList.toggle('active', !!d.LB);
-        document.getElementById('btnDA').classList.toggle('active', !!d.DA);
-        document.getElementById('btnDB').classList.toggle('active', !!d.DB);
-        document.getElementById('btnW').classList.toggle('active', !!d.W);
-        document.getElementById('extraInput').value = d.EX;
+    const firebaseConfig = { 
+        apiKey: "AIzaSyBfQcQbrs6m7euc6twcKeHMBH8GJkoM76g", authDomain: "vettrack-1c65e.firebaseapp.com", projectId: "vettrack-1c65e", 
+        storageBucket: "vettrack-1c65e.firebasestorage.app", messagingSenderId: "591343582241", appId: "1:591343582241:web:9fc9761725ad7d9bb97760" 
+    };
 
-        renderStats();
-        renderTable();
-        renderArchives();
-    }
+    const app = initializeApp(firebaseConfig), db = getFirestore(app);
 
-    function toggleField(field) {
-        const d = viewDate.getDate();
-        if(!data[d]) data[d] = {LA:0, LB:0, DA:0, DB:0, W:0, EX:0};
-        if(field === 'LA') { data[d].LA = !data[d].LA; data[d].LB = 0; }
-        if(field === 'LB') { data[d].LB = !data[d].LB; data[d].LA = 0; }
-        if(field === 'DA') { data[d].DA = !data[d].DA; data[d].DB = 0; }
-        if(field === 'DB') { data[d].DB = !data[d].DB; data[d].DA = 0; }
-        if(field === 'W')  { data[d].W = !data[d].W; }
-        save();
-    }
+    // NAVIGATION
+    window.nav = (id, el) => {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        el.classList.add('active');
+    };
 
-    function updateExtra(v) {
-        const d = viewDate.getDate();
-        if(!data[d]) data[d] = {LA:0, LB:0, DA:0, DB:0, W:0, EX:0};
-        data[d].EX = parseInt(v) || 0;
-        save();
-    }
+    // FULL SYNC - FETCH ALL USERS
+    window.fetchMasterUsers = async () => {
+        const snap = await getDocs(collection(db, "users"));
+        const list = document.getElementById('masterUserList');
+        list.innerHTML = "";
 
-    function save() {
-        localStorage.setItem(currentKey, JSON.stringify(data));
-        const s = document.getElementById('saveIndicator');
-        s.style.opacity = 1; setTimeout(() => s.style.opacity = 0, 1000);
-        applyUI();
-    }
-
-    function renderStats() {
-        let meals = 0, water = 0, extras = 0;
-        Object.values(data).forEach(v => {
-            if(v.LA || v.LB) meals++; if(v.DA || v.DB) meals++;
-            if(v.W) water++; extras += (v.EX || 0);
+        snap.forEach(userDoc => {
+            const uid = userDoc.id;
+            const div = document.createElement('div');
+            div.className = "user-card";
+            div.innerHTML = `
+                <div class="user-info">
+                    <h3>Diner: ${uid.substring(0,6)}</h3>
+                    <p>Verified Account</p>
+                </div>
+                <button class="btn-action" onclick="syncUserFullHistory('${uid}')">Sync Logs</button>
+            `;
+            list.appendChild(div);
         });
-        const cost = (meals + extras) * config.pM + (water * config.pW);
-        document.getElementById('statTotal').innerText = `₹${cost}`;
-        document.getElementById('statMeals').innerText = meals + extras;
-        const pct = Math.min((cost / config.bud) * 100, 100);
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('budgetPct').innerText = Math.round(pct) + '%';
-    }
+    };
 
-    function renderTable() {
-        const tbody = document.getElementById('tbody'); tbody.innerHTML = '';
-        const days = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 0).getDate();
-        for(let i=1; i<=days; i++) {
-            const r = data[i] || {LA:0, LB:0, DA:0, DB:0, W:0};
-            const tr = document.createElement('tr');
-            if(i === viewDate.getDate()) tr.style.background = 'rgba(37,99,235,0.1)';
-            tr.onclick = () => { viewDate.setDate(i); applyUI(); window.scrollTo(0,0); };
-            tr.innerHTML = `<td>${i}</td><td>${r.LA?'A':(r.LB?'B':'-')}</td><td>${r.DA?'A':(r.DB?'B':'-')}</td><td>${r.W?'💧':'-'}</td>`;
-            tbody.appendChild(tr);
+    // FULL DATA SYNC - DRILL DOWN INTO ALL COLLECTIONS
+    window.syncUserFullHistory = async (uid) => {
+        document.getElementById('sheetTitle').innerText = "Syncing History...";
+        document.getElementById('fullDataSync').innerHTML = "Fetching every log from cloud...";
+        openSheet();
+
+        const logSnap = await getDocs(collection(db, `users/${uid}/logs`));
+        const history = document.getElementById('fullDataSync');
+        history.innerHTML = "";
+
+        if(logSnap.empty) {
+            history.innerHTML = "<p style='text-align:center;'>No historical data found.</p>";
+            return;
         }
-    }
 
-    function renderArchives() {
-        const box = document.getElementById('archiveBox');
-        const archives = JSON.parse(localStorage.getItem('m-archives')) || [];
-        box.innerHTML = archives.map(a => `<div class="archive-item">
-            <div class="archive-info"><b>Month: ${a.date}</b><small>${a.meals} Meals logged</small></div>
-            <b style="color:var(--primary)">₹${a.bill}</b>
-        </div>`).join('') || '<p style="text-align:center; color:var(--muted)">No archives yet</p>';
-    }
+        logSnap.forEach(d => {
+            const data = d.data();
+            let meals = 0, water = 0;
+            Object.values(data).forEach(v => { if(v.l) meals++; if(v.d) meals++; if(v.w) water++; });
 
-    function updateSet() {
-        config.nA = document.getElementById('setNameA').value;
-        config.nB = document.getElementById('setNameB').value;
-        config.pM = parseInt(document.getElementById('setPriceM').value) || 0;
-        config.pW = parseInt(document.getElementById('setPriceW').value) || 0;
-        localStorage.setItem('m-conf', JSON.stringify(config));
-        applyUI();
-    }
+            const row = document.createElement('div');
+            row.className = "log-item";
+            row.innerHTML = `
+                <div>
+                    <b>Month: ${d.id.replace('_', '/')}</b><br>
+                    <small>${meals} Meals • ${water} Water</small>
+                </div>
+                <span class="badge">₹${(meals*50 + water*30)}</span>
+            `;
+            history.appendChild(row);
+        });
+        document.getElementById('sheetTitle').innerText = "Full History Sync";
+    };
 
-    function toggleEl(id) { 
-        const e = document.getElementById(id); 
-        e.style.display = e.style.display === 'block' ? 'none' : 'block'; 
-    }
+    window.openSheet = () => {
+        document.getElementById('sheetOverlay').style.display = 'flex';
+        setTimeout(() => document.getElementById('sheet').classList.add('open'), 10);
+    };
 
-    function toggleTheme() { document.body.classList.toggle('dark'); }
-    
-    runArchive();
-    applyUI();
+    window.closeSheet = () => {
+        document.getElementById('sheet').classList.remove('open');
+        setTimeout(() => document.getElementById('sheetOverlay').style.display = 'none', 300);
+    };
+
+    window.saveGlobalConfig = async () => {
+        const meal = document.getElementById('gMeal').value;
+        const water = document.getElementById('gWater').value;
+        await setDoc(doc(db, "admin", "global_config"), { meal: parseInt(meal), water: parseInt(water), updated: new Date() });
+        alert("Global rates updated!");
+    };
+
+    fetchMasterUsers();
 </script>
 </body>
 </html>
